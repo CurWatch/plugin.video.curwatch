@@ -1,2 +1,6 @@
+v0.0.2
+- Changed order
+- Removed TeleAruba
+- Added Rtv-7
 v0.0.1
 - Initial version
