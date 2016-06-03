@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="plugin.video.curwatch"
-version="0.0.7"
+version="0.0.8"
 name="Cur.Watch"
 provider-name="Cur.Watch">
 <requires>
