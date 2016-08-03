@@ -2,54 +2,26 @@ import sys
 from urlparse import parse_qsl
 import xbmcgui
 import xbmcplugin
+import urllib2
+import json
+
 
 # Get the plugin url in plugin:// notation.
 _url = sys.argv[0]
 # Get the plugin handle as an integer number.
 _handle = int(sys.argv[1])
 
-VIDEOS = {'Live Television': [{'name': 'CBA Television',
-                       'thumb': 'https://cur.watch/images/tv_cba.png',
-                       'fanart':'https://cur.watch/images/kodi_fanart.jpg',
-                       'video': 'https://cur.watch/api/get_stream/cba/kodi/mystream.m3u8',
-                       'genre': 'Live Television'},
-                      {'name': 'Telecuracao',
-                       'thumb': 'https://cur.watch/images/tv_tc.png',
-                       'fanart':'https://cur.watch/images/kodi_fanart.jpg',
-                       'video': 'https://cur.watch/api/get_stream/telecuracao/kodi/mystream.m3u8',
-                       'genre': 'Live Television'},
-                      {'name': 'TCFM Telecuracao FM',
-                       'thumb': 'https://cur.watch/images/tv_tcfm.png',
-                       'fanart':'https://cur.watch/images/kodi_fanart.jpg',
-                       'video': 'https://cur.watch/api/get_stream/telecuracaofm/kodi/mystream.m3u8',
-                       'genre': 'Live Television'},
-						{'name': 'Nos Pais TV',
-                       'thumb': 'https://cur.watch/images/tv_nospais.png',
-                       'fanart':'https://cur.watch/images/kodi_fanart.jpg',
-                       'video': 'https://cur.watch/api/get_stream/nospais/kodi/mystream.m3u8',
-                       'genre': 'Live Television'},
-                       {'name': 'Rtv-7',
-                       'thumb': 'https://cur.watch/images/tv_rtv7.png',
-                       'fanart':'https://cur.watch/images/kodi_fanart.jpg',
-                       'video': 'https://cur.watch/api/get_stream/rtv7/kodi/mystream.m3u8',
-                       'genre': 'Live Television'},
-                       {'name': 'TV Direct 13 [COLOR red]HD[/COLOR]',
-                       'thumb': 'http://cur.watch/images/tv_tvd13.png',
-                       'fanart':'https://cur.watch/images/kodi_fanart.jpg',
-                       'video': 'https://cur.watch/api/get_stream/direct/kodi/mystream.m3u8',
-                       'genre': 'Live Television'}
-                      ],
-            'Video On Demand': [{'name': 'E Notisia (CBA Television)',
-                      'thumb': 'https://cur.watch/images/show_e-notisia.jpg',
-                      'fanart':'https://cur.watch/images/kodi_fanart.jpg',
-                      'video': 'https://cur.watch/api/last_episode/e-notisia/kodi.mp4',
-                      'genre': 'Video On Demand'},
-                     {'name': 'Telenotisia (Telecuracao)',
-                      'thumb': 'https://cur.watch/roku/show_telenotisia.jpg',
-                      'fanart':'https://cur.watch/images/kodi_fanart.jpg',
-                      'video': 'https://cur.watch/api/last_episode/telenotisia/kodi.mp4',
-                      'genre': 'Video On Demand'}, 
-                     ]}
+hdr = {'User-Agent': 'CurWatch Kodi AddOn',
+       'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+       'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+       'Accept-Encoding': 'none',
+       'Accept-Language': 'en-US,en;q=0.8',
+       'Connection': 'keep-alive'}
+
+req = urllib2.Request("http://cur.watch/api/kodiapi/001/menu.json", headers=hdr)
+opener = urllib2.build_opener()
+f = opener.open(req)
+VIDEOS = json.loads(f.read())
 
 
 def get_categories():
@@ -87,7 +59,7 @@ def list_categories():
     # Iterate through categories
     for category in categories:
         # Create a list item with a text label and a thumbnail image.
-        list_item = xbmcgui.ListItem(label=category, thumbnailImage=VIDEOS[category][0]['thumb'])
+        list_item = xbmcgui.ListItem(label=category, thumbnailImage='https://cur.watch/images/kodi_icon.png')
         # Set graphics (thumbnail, fanart, banner, poster, landscape etc.) for the list item.
         # Here we use the same image for all items for simplicity's sake.
         # In a real-life plugin you need to set each image accordingly.
@@ -153,7 +125,7 @@ def list_videos(category):
     # instead of adding one by ove via addDirectoryItem.
     xbmcplugin.addDirectoryItems(_handle, listing, len(listing))
     # Add a sort method for the virtual folder items (alphabetically, ignore articles)
-    #xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
+    # xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
     # Finish creating a virtual folder.
     xbmcplugin.endOfDirectory(_handle)
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="plugin.video.curwatch"
-version="0.0.8"
+version="0.0.9"
 name="Cur.Watch"
 provider-name="Cur.Watch">
 <requires>
@@ -18,6 +18,6 @@ This service is provided as-is, and free of charge, with no guarantees.</disclai
     <platform>all</platform>
     <license></license>
     <forum></forum>
-    <website>www.cur.watch</website>
+    <website>http://cur.watch</website>
 </extension>
 </addon>
